@@ -20,7 +20,7 @@ class Crowller {
     constructor(analyzer, url) {
         this.analyzer = analyzer;
         this.url = url;
-        this.filePath = path_1.default.resolve(__dirname, "./data/course.json");
+        this.filePath = path_1.default.resolve(__dirname, "../data/course.json");
         this.rawHtml = "";
         this.initSpiderprocess = () => __awaiter(this, void 0, void 0, function* () {
             yield this.getRawHtml();
