@@ -1,14 +1,14 @@
 import SuperAgent from "superagent"
-import * as cheerio  from "cheerio"
 import fs from "fs"
 import path from "path"
 import ContentAnalyzer from "./contentAnalyzer"
 
+ export interface Analyzer {
+  analyze(html: string, filePath:string): string
+}
 
 class Crowller {
-    private secret = "123456"
     private filePath = path.resolve(__dirname, './data/course.json')
-    private url = `http://www.dell-lee.com/typescript/demo.html?secret=${this.secret}`
     private rawHtml = ''
 
     initSpiderprocess = async () => {
@@ -25,10 +25,13 @@ class Crowller {
       fs.writeFileSync(this.filePath, Content)
     }
 
-    constructor(private analyzer: ContentAnalyzer) {
+    constructor(private analyzer: Analyzer, private url: string) {
         this.initSpiderprocess() 
     }
 }
 
+const secret = "123456"
+const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`
+
 const analyzer = new ContentAnalyzer()
-const crowller = new Crowller(analyzer)
+new Crowller(analyzer, url)

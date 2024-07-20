@@ -1,7 +1,6 @@
-import SuperAgent from "superagent"
 import * as cheerio  from "cheerio"
 import fs from "fs"
-import path from "path"
+import {Analyzer} from "./crowller"
 
 interface CourseInfo {
     title: string
@@ -16,7 +15,7 @@ interface CourseInfo {
   interface Content {
     [time: string]: CourseInfo[]
   }
-export default class ContentAnalyzer {
+export default class ContentAnalyzer implements Analyzer {
   constructor() {
     
   }
