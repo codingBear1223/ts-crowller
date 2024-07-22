@@ -20,7 +20,7 @@ router.post("/eight", (req, res) => {
         const url = `http://www.dell-lee.com/typescript/demo.html?secret=${password}`;
         const analyzer = contentAnalyzer_1.default.getInstance();
         new crowller_1.default(analyzer, url);
-        res.send("success");
+        res.send(`${req.userName} success`);
     }
     else {
         res.send("wrong password");

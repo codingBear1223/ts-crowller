@@ -22,7 +22,7 @@ router.post("/eight", (req: RequestWithBody, res: Response) => {
     const analyzer = ContentAnalyzer.getInstance();
 
     new Crowller(analyzer, url);
-    res.send("success");
+    res.send(`${req.userName} success`);
   } else {
     res.send("wrong password");
   }
