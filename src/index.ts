@@ -1,9 +1,8 @@
 import express, { Express, Request, Response } from "express";
+import router from "./router";
 
 const app = express();
-app.get("/", (req: Request, res: Response) => {
-  res.send("9999");
-});
+app.use(router);
 app.listen(7001, () => {
   console.log("server is running");
 });
