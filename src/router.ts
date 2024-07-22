@@ -2,6 +2,9 @@ import { Router, Request, Response } from "express";
 import Crowller from "./crowller";
 import ContentAnalyzer from "./contentAnalyzer";
 
+interface RequestWithBody extends Request {
+  body: { [key: string]: string | undefined };
+}
 const router = Router();
 router.get("/", (req: Request, res: Response) => {
   res.send(
@@ -11,7 +14,7 @@ router.get("/", (req: Request, res: Response) => {
     </form></body></html>`
   );
 });
-router.post("/eight", (req: Request, res: Response) => {
+router.post("/eight", (req: RequestWithBody, res: Response) => {
   //expess 类型文件中的 req 类型描述不准确，是 any
   const { password } = req.body;
   if (password === "123456") {
