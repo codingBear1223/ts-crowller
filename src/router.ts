@@ -4,13 +4,23 @@ import ContentAnalyzer from "./contentAnalyzer";
 
 const router = Router();
 router.get("/", (req: Request, res: Response) => {
-  res.send("9999");
+  res.send(
+    `<html><body><form method="post" action="/eight">
+        <input type="password" name="password"/>
+        <button>提交</button>
+    </form></body></html>`
+  );
 });
-router.get("/eight", (req: Request, res: Response) => {
-  const url = `http://www.dell-lee.com/typescript/demo.html?secret=123456`;
-  const analyzer = ContentAnalyzer.getInstance();
+router.post("/eight", (req: Request, res: Response) => {
+  const { password } = req.body;
+  if (password === "123456") {
+    const url = `http://www.dell-lee.com/typescript/demo.html?secret=${password}`;
+    const analyzer = ContentAnalyzer.getInstance();
 
-  new Crowller(analyzer, url);
-  res.send("888");
+    new Crowller(analyzer, url);
+    res.send("success");
+  } else {
+    res.send("wrong password");
+  }
 });
 export default router;
