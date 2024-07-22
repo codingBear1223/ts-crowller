@@ -1,13 +1,12 @@
 import SuperAgent from "superagent";
 import fs from "fs";
 import path from "path";
-import ContentAnalyzer from "./contentAnalyzer";
 
 export interface Analyzer {
   analyze(html: string, filePath: string): string;
 }
 
-class Crowller {
+export default class Crowller {
   private filePath = path.resolve(__dirname, "../data/course.json");
   private rawHtml = "";
 
@@ -29,9 +28,3 @@ class Crowller {
     this.initSpiderprocess();
   }
 }
-
-const secret = "123456";
-const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
-
-const analyzer = ContentAnalyzer.getInstance();
-new Crowller(analyzer, url);

@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const superagent_1 = __importDefault(require("superagent"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const contentAnalyzer_1 = __importDefault(require("./contentAnalyzer"));
 class Crowller {
     constructor(analyzer, url) {
         this.analyzer = analyzer;
@@ -37,7 +36,4 @@ class Crowller {
         this.initSpiderprocess();
     }
 }
-const secret = "123456";
-const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
-const analyzer = contentAnalyzer_1.default.getInstance();
-new Crowller(analyzer, url);
+exports.default = Crowller;
