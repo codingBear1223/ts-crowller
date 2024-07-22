@@ -12,6 +12,7 @@ router.get("/", (req: Request, res: Response) => {
   );
 });
 router.post("/eight", (req: Request, res: Response) => {
+  //expess 类型文件中的 req 类型描述不准确，是 any
   const { password } = req.body;
   if (password === "123456") {
     const url = `http://www.dell-lee.com/typescript/demo.html?secret=${password}`;
