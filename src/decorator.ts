@@ -12,8 +12,8 @@ function decorateFnc() {
   };
 }
 
-const Test = decorateFnc()(
-  class {
+const TestNew = decorateFnc()(
+  class Test {
     name: string;
     constructor(name: string) {
       this.name = name;
@@ -21,5 +21,5 @@ const Test = decorateFnc()(
   }
 );
 
-const ins = new Test("lili");
+const ins = new TestNew("lili");
 console.log(ins.getName());
