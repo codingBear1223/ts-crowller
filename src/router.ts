@@ -12,7 +12,9 @@ router.get("/", (req: Request, res: Response) => {
   const isLogin = req.session ? req.session.login : false;
   if (isLogin) {
     res.send(
-      `<html><body><a href='/eight'>爬取内容</a><a href='/logout'>退出</a></body></html>`
+      `<html><body><a href='/eight'>爬取内容 </a>
+      <a href='/showData'>展示内容 </a>
+      <a href='/logout'>退出</a></body></html>`
     );
     return;
   }
@@ -59,8 +61,17 @@ router.post("/login", (req: RequestWithBody, res: Response) => {
   }
 });
 router.get("/showData", (req: Request, res: Response) => {
-  const filePath = path.resolve(__dirname, "../data/course.json");
-  const result = fs.readFileSync(filePath, "utf-8");
-  res.json(result);
+  const isLogin = req.session ? req.session.login : false;
+  if (!isLogin) {
+    res.send(`<html><body><a href='/login'>未登录，现在登录</a></body></html>`);
+    return;
+  }
+  try {
+    const filePath = path.resolve(__dirname, "../data/course.json");
+    const result = fs.readFileSync(filePath, "utf-8");
+    res.json(JSON.parse(result));
+  } catch {
+    res.send("尚未爬取到内容");
+  }
 });
 export default router;
