@@ -1,14 +1,25 @@
-import { Router, Request, Response } from "express";
-import Crowller from "./crowller";
-import ContentAnalyzer from "./contentAnalyzer";
+import { Router, Request, Response, NextFunction } from "express";
+import Crowller from "./utils/crowller";
+import ContentAnalyzer from "./utils/contentAnalyzer";
+import { getResponseData } from "./utils/util";
 const fs = require("fs");
 const path = require("path");
 
-interface RequestWithBody extends Request {
+interface BodyRequest extends Request {
   body: { [key: string]: string | undefined };
 }
 const router = Router();
-router.get("/", (req: Request, res: Response) => {
+
+const checkLogin = (req: BodyRequest, res: Response, next: NextFunction) => {
+  const isLogin = req.session ? req.session.login : false;
+  if (isLogin) {
+    next();
+  } else {
+    res.json(getResponseData(null, "请先登录"));
+  }
+};
+
+router.get("/", (req: BodyRequest, res: Response) => {
   const isLogin = req.session ? req.session.login : false;
   if (isLogin) {
     res.send(
@@ -17,61 +28,53 @@ router.get("/", (req: Request, res: Response) => {
       <a href='/logout'>退出</a></body></html>`
     );
     return;
+  } else {
+    res.send(
+      `<html><body><form method="post" action="/login">
+      <input type="password" name="password"/>
+      <button>登录</button>
+  </form></body></html>`
+    );
   }
-  res.send(
-    `<html><body><form method="post" action="/login">
-        <input type="password" name="password"/>
-        <button>登录</button>
-    </form></body></html>`
-  );
 });
-router.get("/logout", (req: Request, res: Response) => {
+router.get("/logout", checkLogin, (req: BodyRequest, res: Response) => {
   if (req.session) {
     req.session.login = undefined;
   }
-  res.redirect("/");
+  res.json(getResponseData(true));
 });
-router.get("/eight", (req: RequestWithBody, res: Response) => {
+router.get("/eight", checkLogin, (req: BodyRequest, res: Response) => {
   //expess 类型文件中的 req 类型描述不准确，是 any
-  const isLogin = req.session ? req.session.login : false;
-  if (isLogin) {
-    const url = `http://www.dell-lee.com/typescript/demo.html?secret=123456`;
-    const analyzer = ContentAnalyzer.getInstance();
 
-    new Crowller(analyzer, url);
-    res.send(`success`);
-  } else {
-    res.send(`<html><body><a href='/login'>未登录，现在登录</a></body></html>`);
-  }
+  const url = `http://www.dell-lee.com/typescript/demo.html?secret=123456`;
+  const analyzer = ContentAnalyzer.getInstance();
+
+  new Crowller(analyzer, url);
+  res.json(getResponseData(true));
 });
 
-router.post("/login", (req: RequestWithBody, res: Response) => {
+router.post("/login", (req: BodyRequest, res: Response) => {
   //expess 类型文件中的 req 类型描述不准确，是 any
   const isLogin = req.session ? req.session.login : false;
   const { password } = req.body;
   if (isLogin) {
-    res.send(`already login`);
+    res.json(getResponseData(false, "已经登录"));
     return;
   }
   if (password === "123456") {
     req.session.login = true;
-    res.send(`success`);
+    res.json(getResponseData(true));
   } else {
-    res.send("wrong password");
+    res.json(getResponseData(false, "密码错误"));
   }
 });
-router.get("/showData", (req: Request, res: Response) => {
-  const isLogin = req.session ? req.session.login : false;
-  if (!isLogin) {
-    res.send(`<html><body><a href='/login'>未登录，现在登录</a></body></html>`);
-    return;
-  }
+router.get("/showData", checkLogin, (req: BodyRequest, res: Response) => {
   try {
     const filePath = path.resolve(__dirname, "../data/course.json");
     const result = fs.readFileSync(filePath, "utf-8");
-    res.json(JSON.parse(result));
+    res.json(getResponseData(JSON.parse(result)));
   } catch {
-    res.send("尚未爬取到内容");
+    res.json(getResponseData(false, "尚未爬取到内容"));
   }
 });
 export default router;
