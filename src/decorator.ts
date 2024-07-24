@@ -104,6 +104,19 @@ class nameTest {
   name: "dell"; //name 的值 dell 是在对象中，不可以通过 prototype 修改对象的属性值
 }
 
-const nameIns = new nameTest();
+//const nameIns = new nameTest();
 //nameIns.name = "lisa";
-console.log((nameIns as any).__proto__.name); //amy
+//console.log((nameIns as any).__proto__.name); //amy
+
+//参数装饰器
+function paramDecorator(target: any, key: string, index: number) {
+  console.log("paramDecorator=>", target, key, index);
+}
+
+class ParamTest {
+  getName(@paramDecorator name: string) {
+    return name;
+  }
+}
+const paramIns = new ParamTest();
+paramIns.getName("frfr");
