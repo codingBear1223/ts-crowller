@@ -61,6 +61,7 @@ class FncFactory {
 //console.log(ins.getName());
 //console.log(fnc.getName());
 
+//访问器装饰器
 function visitFactory(
   target: any,
   key: string,
@@ -85,5 +86,24 @@ class privtFactory {
   }
 }
 
-const visit = new privtFactory("vvvv");
-visit.name = "change";
+// const visit = new privtFactory("vvvv");
+// visit.name = "change";
+
+//属性装饰器
+function nameDecorator(target: any, key: string): any {
+  console.log("nameDecorator=>", target, key);
+  target[key] = "amy"; //不生效，修改的是 prototype 的属性值
+  const descriptor: PropertyDescriptor = {
+    writable: false,
+  };
+  return descriptor;
+}
+
+class nameTest {
+  @nameDecorator
+  name: "dell"; //name 的值 dell 是在对象中，不可以通过 prototype 修改对象的属性值
+}
+
+const nameIns = new nameTest();
+//nameIns.name = "lisa";
+console.log((nameIns as any).__proto__.name); //amy
