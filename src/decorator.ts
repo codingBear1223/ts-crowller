@@ -118,5 +118,34 @@ class ParamTest {
     return name;
   }
 }
-const paramIns = new ParamTest();
-paramIns.getName("frfr");
+// const paramIns = new ParamTest();
+// paramIns.getName("frfr");
+
+//用方法装饰器执行异常捕获功能
+function catchErrorFunction(msg: string) {
+  return function (target: any, key: string, descriptor: PropertyDescriptor) {
+    const fn = descriptor.value;
+    descriptor.value = function () {
+      try {
+        fn();
+      } catch (e) {
+        console.log(msg);
+      }
+    };
+  };
+}
+
+class errTest {
+  userInfo: { name: string; age: number } = undefined;
+  @catchErrorFunction("用户名不存在")
+  getName() {
+    return this.userInfo.name;
+  }
+  @catchErrorFunction("年龄不存在")
+  getAge() {
+    return this.userInfo.age;
+  }
+}
+
+const errIns = new errTest();
+errIns.getName();
