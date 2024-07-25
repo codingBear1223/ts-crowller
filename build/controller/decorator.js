@@ -1,10 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.router = void 0;
+exports.put = exports.post = exports.get = exports.router = void 0;
 exports.controller = controller;
-exports.put = put;
-exports.get = get;
-exports.post = post;
 var express_1 = require("express");
 exports.router = (0, express_1.Router)();
 var Method;
@@ -22,21 +19,15 @@ function controller(target) {
         }
     }
 }
-function put(path) {
-    return function (target, key) {
-        Reflect.defineMetadata("path", path, target, key);
-        Reflect.defineMetadata("method", "put", target, key);
+//使用工厂模式处理多种请求类型
+function getRequestDecorator(type) {
+    return function (path) {
+        return function (target, key) {
+            Reflect.defineMetadata("path", path, target, key);
+            Reflect.defineMetadata("method", type, target, key);
+        };
     };
 }
-function get(path) {
-    return function (target, key) {
-        Reflect.defineMetadata("path", path, target, key);
-        Reflect.defineMetadata("method", "get", target, key);
-    };
-}
-function post(path) {
-    return function (target, key) {
-        Reflect.defineMetadata("path", path, target, key);
-        Reflect.defineMetadata("method", "post", target, key);
-    };
-}
+exports.get = getRequestDecorator("get");
+exports.post = getRequestDecorator("post");
+exports.put = getRequestDecorator("put");
