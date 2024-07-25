@@ -137,10 +137,6 @@ function nameDecorator(target, key) {
 var nameTest = /** @class */ (function () {
     function nameTest() {
     }
-    __decorate([
-        nameDecorator,
-        __metadata("design:type", String)
-    ], nameTest.prototype, "name", void 0);
     return nameTest;
 }());
 //const nameIns = new nameTest();
@@ -180,29 +176,16 @@ function catchErrorFunction(msg) {
         };
     };
 }
-var errTest = /** @class */ (function () {
-    function errTest() {
-        this.userInfo = undefined;
-    }
-    errTest.prototype.getName = function () {
-        return this.userInfo.name;
-    };
-    errTest.prototype.getAge = function () {
-        return this.userInfo.age;
-    };
-    __decorate([
-        catchErrorFunction("用户名不存在"),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", void 0)
-    ], errTest.prototype, "getName", null);
-    __decorate([
-        catchErrorFunction("年龄不存在"),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", void 0)
-    ], errTest.prototype, "getAge", null);
-    return errTest;
-}());
-var errIns = new errTest();
-errIns.getName();
+// class errTest {
+//   userInfo: { name: string; age: number } = undefined;
+//   @catchErrorFunction("用户名不存在")
+//   getName() {
+//     return this.userInfo.name;
+//   }
+//   @catchErrorFunction("年龄不存在")
+//   getAge() {
+//     return this.userInfo.age;
+//   }
+// }
+// const errIns = new errTest();
+// errIns.getName();

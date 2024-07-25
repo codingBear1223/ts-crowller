@@ -100,8 +100,8 @@ function nameDecorator(target: any, key: string): any {
 }
 
 class nameTest {
-  @nameDecorator
-  name: "dell"; //name 的值 dell 是在对象中，不可以通过 prototype 修改对象的属性值
+  // @nameDecorator
+  //name: "dell"; //name 的值 dell 是在对象中，不可以通过 prototype 修改对象的属性值
 }
 
 //const nameIns = new nameTest();
@@ -135,17 +135,17 @@ function catchErrorFunction(msg: string) {
   };
 }
 
-class errTest {
-  userInfo: { name: string; age: number } = undefined;
-  @catchErrorFunction("用户名不存在")
-  getName() {
-    return this.userInfo.name;
-  }
-  @catchErrorFunction("年龄不存在")
-  getAge() {
-    return this.userInfo.age;
-  }
-}
+// class errTest {
+//   userInfo: { name: string; age: number } = undefined;
+//   @catchErrorFunction("用户名不存在")
+//   getName() {
+//     return this.userInfo.name;
+//   }
+//   @catchErrorFunction("年龄不存在")
+//   getAge() {
+//     return this.userInfo.age;
+//   }
+// }
 
-const errIns = new errTest();
-errIns.getName();
+// const errIns = new errTest();
+// errIns.getName();

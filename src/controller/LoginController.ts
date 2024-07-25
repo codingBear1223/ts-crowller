@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { Request, Response } from "express";
-import { controller, get } from "./decorator";
+import { controller, get, post } from "./decorator";
 import { getResponseData } from "../utils/util";
 
 interface BodyRequest extends Request {
@@ -9,6 +9,22 @@ interface BodyRequest extends Request {
 
 @controller
 class LoginController {
+  @post("/login")
+  login(req: BodyRequest, res: Response) {
+    //expess 类型文件中的 req 类型描述不准确，是 any
+    const isLogin = req.session ? req.session.login : false;
+    const { password } = req.body;
+    if (isLogin) {
+      res.json(getResponseData(false, "已经登录"));
+      return;
+    }
+    if (password === "123456" && req.session) {
+      req.session.login = true;
+      res.json(getResponseData(true));
+    } else {
+      res.json(getResponseData(false, "密码错误"));
+    }
+  }
   @get("/logout")
   logout(req: BodyRequest, res: Response) {
     if (req.session) {

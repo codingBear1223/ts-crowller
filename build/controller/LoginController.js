@@ -15,6 +15,22 @@ var util_1 = require("../utils/util");
 var LoginController = /** @class */ (function () {
     function LoginController() {
     }
+    LoginController.prototype.login = function (req, res) {
+        //expess 类型文件中的 req 类型描述不准确，是 any
+        var isLogin = req.session ? req.session.login : false;
+        var password = req.body.password;
+        if (isLogin) {
+            res.json((0, util_1.getResponseData)(false, "已经登录"));
+            return;
+        }
+        if (password === "123456" && req.session) {
+            req.session.login = true;
+            res.json((0, util_1.getResponseData)(true));
+        }
+        else {
+            res.json((0, util_1.getResponseData)(false, "密码错误"));
+        }
+    };
     LoginController.prototype.logout = function (req, res) {
         if (req.session) {
             req.session.login = undefined;
@@ -30,6 +46,12 @@ var LoginController = /** @class */ (function () {
             res.send("\n      <html>\n        <body>\n          <form method=\"post\" action=\"/login\">\n            <input type=\"password\" name=\"password\" />\n            <button>\u767B\u9646</button>\n          </form>\n        </body>\n      </html>\n    ");
         }
     };
+    __decorate([
+        (0, decorator_1.post)("/login"),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", void 0)
+    ], LoginController.prototype, "login", null);
     __decorate([
         (0, decorator_1.get)("/logout"),
         __metadata("design:type", Function),
