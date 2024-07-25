@@ -19,24 +19,7 @@ const checkLogin = (req: BodyRequest, res: Response, next: NextFunction) => {
   }
 };
 
-router.get("/", (req: BodyRequest, res: Response) => {
-  const isLogin = req.session ? req.session.login : false;
-  if (isLogin) {
-    res.send(
-      `<html><body><a href='/eight'>爬取内容 </a>
-      <a href='/showData'>展示内容 </a>
-      <a href='/logout'>退出</a></body></html>`
-    );
-    return;
-  } else {
-    res.send(
-      `<html><body><form method="post" action="/login">
-      <input type="password" name="password"/>
-      <button>登录</button>
-  </form></body></html>`
-    );
-  }
-});
+router.get("/", () => {});
 router.get("/logout", checkLogin, (req: BodyRequest, res: Response) => {
   if (req.session) {
     req.session.login = undefined;

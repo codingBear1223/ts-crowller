@@ -19,21 +19,7 @@ const checkLogin = (req, res, next) => {
         res.json((0, util_1.getResponseData)(null, "请先登录"));
     }
 };
-router.get("/", (req, res) => {
-    const isLogin = req.session ? req.session.login : false;
-    if (isLogin) {
-        res.send(`<html><body><a href='/eight'>爬取内容 </a>
-      <a href='/showData'>展示内容 </a>
-      <a href='/logout'>退出</a></body></html>`);
-        return;
-    }
-    else {
-        res.send(`<html><body><form method="post" action="/login">
-      <input type="password" name="password"/>
-      <button>登录</button>
-  </form></body></html>`);
-    }
-});
+router.get("/", () => { });
 router.get("/logout", checkLogin, (req, res) => {
     if (req.session) {
         req.session.login = undefined;
