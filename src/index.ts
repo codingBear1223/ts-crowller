@@ -1,19 +1,22 @@
-import express, { Express, NextFunction, Request, Response } from "express";
-import router from "./router";
+import express from "express";
 import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
+//import router from "./router";
+import "./controller/LoginController";
+import { router } from "./controller/decorator";
 
 const app = express();
-//express 中间件对 req 或 res 修改之后，并不能修改其类型
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   cookieSession({
     name: "session",
-    keys: ["hky"],
+    keys: ["teacher dell"],
     maxAge: 24 * 60 * 60 * 1000,
   })
 );
+
 app.use(router);
-app.listen(7001, () => {
+
+app.listen(7003, () => {
   console.log("server is running");
 });

@@ -1,4 +1,19 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -15,23 +30,27 @@ function decorateFnc() {
     return function (constructor) {
         //构造函数可以有多个任意类型的参数 ...args
         //泛型 T 继承了构造函数，具备了构造函数的能力
-        return class extends constructor {
-            constructor() {
-                super(...arguments);
-                this.age = 24;
-                this.name = "frfr";
+        return /** @class */ (function (_super) {
+            __extends(class_1, _super);
+            function class_1() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.age = 24;
+                _this.name = "frfr";
+                return _this;
             }
-            getName() {
+            class_1.prototype.getName = function () {
                 return this.name;
-            }
-        };
+            };
+            return class_1;
+        }(constructor));
     };
 }
-const TestNew = decorateFnc()(class Test {
-    constructor(name) {
+var TestNew = decorateFnc()(/** @class */ (function () {
+    function Test(name) {
         this.name = name;
     }
-});
+    return Test;
+}()));
 //函数装饰器
 //装饰普通方法时，target 是类的 prototype
 //装饰静态方法时， target 是类的构造函数
@@ -40,33 +59,38 @@ function decorationToFuncs(target, key, descriptor) {
     descriptor.writable = false;
     console.log("fnc=>", target, key);
     //descriptor.value可以修改被装饰方法的值
-    descriptor.value = function (...args) {
+    descriptor.value = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
         return "ssss";
     };
 }
-class FncFactory {
-    constructor(name) {
+var FncFactory = /** @class */ (function () {
+    function FncFactory(name) {
         this.name = name;
     }
-    getName() {
+    FncFactory.prototype.getName = function () {
         return this.name;
-    }
-    static getNum() {
+    };
+    FncFactory.getNum = function () {
         return 134;
-    }
-}
-__decorate([
-    decorationToFuncs,
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], FncFactory.prototype, "getName", null);
-__decorate([
-    decorationToFuncs,
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], FncFactory, "getNum", null);
+    };
+    __decorate([
+        decorationToFuncs,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], FncFactory.prototype, "getName", null);
+    __decorate([
+        decorationToFuncs,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], FncFactory, "getNum", null);
+    return FncFactory;
+}());
 //const ins = new TestNew("lili");
 //const fnc = new FncFactory("jio jio");
 //fnc.getName = () => "frfr";    //descriptor修饰后不可以修改方法了
@@ -77,40 +101,48 @@ function visitFactory(target, key, descriptor) {
     console.log("visitFactory=>", target, key);
     //descriptor.writable = false;  writable是true的话，set name不能赋值
 }
-class privtFactory {
-    constructor(name) {
+var privtFactory = /** @class */ (function () {
+    function privtFactory(name) {
         this._name = name;
     }
-    //get 和 set 不能同时用装饰器
-    get name() {
-        return this._name;
-    }
-    set name(name) {
-        this._name = name;
-    }
-}
-__decorate([
-    visitFactory,
-    __metadata("design:type", String),
-    __metadata("design:paramtypes", [String])
-], privtFactory.prototype, "name", null);
+    Object.defineProperty(privtFactory.prototype, "name", {
+        //get 和 set 不能同时用装饰器
+        get: function () {
+            return this._name;
+        },
+        set: function (name) {
+            this._name = name;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    __decorate([
+        visitFactory,
+        __metadata("design:type", String),
+        __metadata("design:paramtypes", [String])
+    ], privtFactory.prototype, "name", null);
+    return privtFactory;
+}());
 // const visit = new privtFactory("vvvv");
 // visit.name = "change";
 //属性装饰器
 function nameDecorator(target, key) {
     console.log("nameDecorator=>", target, key);
     target[key] = "amy"; //不生效，修改的是 prototype 的属性值
-    const descriptor = {
+    var descriptor = {
         writable: false,
     };
     return descriptor;
 }
-class nameTest {
-}
-__decorate([
-    nameDecorator,
-    __metadata("design:type", String)
-], nameTest.prototype, "name", void 0);
+var nameTest = /** @class */ (function () {
+    function nameTest() {
+    }
+    __decorate([
+        nameDecorator,
+        __metadata("design:type", String)
+    ], nameTest.prototype, "name", void 0);
+    return nameTest;
+}());
 //const nameIns = new nameTest();
 //nameIns.name = "lisa";
 //console.log((nameIns as any).__proto__.name); //amy
@@ -118,23 +150,26 @@ __decorate([
 function paramDecorator(target, key, index) {
     console.log("paramDecorator=>", target, key, index);
 }
-class ParamTest {
-    getName(name) {
-        return name;
+var ParamTest = /** @class */ (function () {
+    function ParamTest() {
     }
-}
-__decorate([
-    __param(0, paramDecorator),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], ParamTest.prototype, "getName", null);
+    ParamTest.prototype.getName = function (name) {
+        return name;
+    };
+    __decorate([
+        __param(0, paramDecorator),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ParamTest.prototype, "getName", null);
+    return ParamTest;
+}());
 // const paramIns = new ParamTest();
 // paramIns.getName("frfr");
 //用方法装饰器执行异常捕获功能
 function catchErrorFunction(msg) {
     return function (target, key, descriptor) {
-        const fn = descriptor.value;
+        var fn = descriptor.value;
         descriptor.value = function () {
             try {
                 fn();
@@ -145,28 +180,29 @@ function catchErrorFunction(msg) {
         };
     };
 }
-class errTest {
-    constructor() {
+var errTest = /** @class */ (function () {
+    function errTest() {
         this.userInfo = undefined;
     }
-    getName() {
+    errTest.prototype.getName = function () {
         return this.userInfo.name;
-    }
-    getAge() {
+    };
+    errTest.prototype.getAge = function () {
         return this.userInfo.age;
-    }
-}
-__decorate([
-    catchErrorFunction("用户名不存在"),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], errTest.prototype, "getName", null);
-__decorate([
-    catchErrorFunction("年龄不存在"),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], errTest.prototype, "getAge", null);
-const errIns = new errTest();
+    };
+    __decorate([
+        catchErrorFunction("用户名不存在"),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], errTest.prototype, "getName", null);
+    __decorate([
+        catchErrorFunction("年龄不存在"),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], errTest.prototype, "getAge", null);
+    return errTest;
+}());
+var errIns = new errTest();
 errIns.getName();

@@ -26,26 +26,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cheerio = __importStar(require("cheerio"));
-const fs_1 = __importDefault(require("fs"));
-class ContentAnalyzer {
-    constructor() {
-        this.getPageInfo = (html) => {
-            const courseInfos = [];
-            const $ = cheerio.load(html);
-            const courseItems = $(".course-item");
-            courseItems.map((index, item) => {
-                const descs = $(item).find(".course-desc");
-                const title = descs.eq(0).text();
-                const count = parseInt(descs.eq(1).text().split("：")[1], 10);
+var cheerio = __importStar(require("cheerio"));
+var fs_1 = __importDefault(require("fs"));
+var ContentAnalyzer = /** @class */ (function () {
+    function ContentAnalyzer() {
+        this.getPageInfo = function (html) {
+            var courseInfos = [];
+            var $ = cheerio.load(html);
+            var courseItems = $(".course-item");
+            courseItems.map(function (index, item) {
+                var descs = $(item).find(".course-desc");
+                var title = descs.eq(0).text();
+                var count = parseInt(descs.eq(1).text().split("：")[1], 10);
                 console.log(title, count);
-                courseInfos.push({ title, count });
+                courseInfos.push({ title: title, count: count });
             });
-            const result = { time: new Date().getTime(), courseInfos };
+            var result = { time: new Date().getTime(), courseInfos: courseInfos };
             return result;
         };
-        this.parseJson = (pageInfo, filePath) => {
-            let fileContent = {};
+        this.parseJson = function (pageInfo, filePath) {
+            var fileContent = {};
             if (fs_1.default.existsSync(filePath)) {
                 fileContent = JSON.parse(fs_1.default.readFileSync(filePath, "utf-8"));
             }
@@ -54,16 +54,17 @@ class ContentAnalyzer {
             return fileContent;
         };
     }
-    analyze(html, path) {
-        const pageInfo = this.getPageInfo(html);
-        const fileContent = this.parseJson(pageInfo, path);
+    ContentAnalyzer.prototype.analyze = function (html, path) {
+        var pageInfo = this.getPageInfo(html);
+        var fileContent = this.parseJson(pageInfo, path);
         return JSON.stringify(fileContent);
-    }
-}
-ContentAnalyzer.getInstance = () => {
-    if (!ContentAnalyzer.instance) {
-        ContentAnalyzer.instance = new ContentAnalyzer();
-    }
-    return ContentAnalyzer.instance;
-};
+    };
+    ContentAnalyzer.getInstance = function () {
+        if (!ContentAnalyzer.instance) {
+            ContentAnalyzer.instance = new ContentAnalyzer();
+        }
+        return ContentAnalyzer.instance;
+    };
+    return ContentAnalyzer;
+}());
 exports.default = ContentAnalyzer;
