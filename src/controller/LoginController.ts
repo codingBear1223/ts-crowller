@@ -1,18 +1,18 @@
 import "reflect-metadata";
 import { Request, Response } from "express";
-import { controller, get, post } from "./decorator";
+import { controller, get, post } from "../decorator/index";
 import { getResponseData } from "../utils/util";
 
 interface BodyRequest extends Request {
   body: { [key: string]: string | undefined };
 }
 
-@controller
-class LoginController {
+@controller("/")
+export class LoginController {
   @post("/login")
   login(req: BodyRequest, res: Response) {
     //expess 类型文件中的 req 类型描述不准确，是 any
-    const isLogin = req.session ? req.session.login : false;
+    const isLogin = !!(req.session ? req.session.login : false);
     const { password } = req.body;
     if (isLogin) {
       res.json(getResponseData(false, "已经登录"));
@@ -35,7 +35,7 @@ class LoginController {
 
   @get("/")
   home(req: BodyRequest, res: Response) {
-    const isLogin = req.session ? req.session.login : false;
+    const isLogin = !!(req.session ? req.session.login : false);
     if (isLogin) {
       res.send(`
       <html>

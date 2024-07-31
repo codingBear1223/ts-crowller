@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { Request, Response, NextFunction } from "express";
-import { controller, get, use } from "./decorator";
+import { controller, use, get } from "../decorator/index";
 import { getResponseData } from "../utils/util";
 import Crowller from "../utils/crowller";
 import ContentAnalyzer from "../utils/contentAnalyzer";
@@ -12,7 +12,7 @@ interface BodyRequest extends Request {
 }
 
 const checkLogin = (req: BodyRequest, res: Response, next: NextFunction) => {
-  const isLogin = req.session ? req.session.login : false;
+  const isLogin = !!(req.session ? req.session.login : false);
   if (isLogin) {
     next();
   } else {
@@ -20,8 +20,8 @@ const checkLogin = (req: BodyRequest, res: Response, next: NextFunction) => {
   }
 };
 
-@controller
-class CrowllerController {
+@controller("/")
+export class CrowllerController {
   @get("/getData")
   @use(checkLogin)
   getData(req: BodyRequest, res: Response) {

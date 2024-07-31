@@ -12,15 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CrowllerController = void 0;
 require("reflect-metadata");
-var decorator_1 = require("./decorator");
+var index_1 = require("../decorator/index");
 var util_1 = require("../utils/util");
 var crowller_1 = __importDefault(require("../utils/crowller"));
 var contentAnalyzer_1 = __importDefault(require("../utils/contentAnalyzer"));
 var fs = require("fs");
 var path = require("path");
 var checkLogin = function (req, res, next) {
-    var isLogin = req.session ? req.session.login : false;
+    var isLogin = !!(req.session ? req.session.login : false);
     if (isLogin) {
         next();
     }
@@ -49,21 +50,22 @@ var CrowllerController = /** @class */ (function () {
         }
     };
     __decorate([
-        (0, decorator_1.get)("/getData"),
-        (0, decorator_1.use)(checkLogin),
+        (0, index_1.get)("/getData"),
+        (0, index_1.use)(checkLogin),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object, Object]),
         __metadata("design:returntype", void 0)
     ], CrowllerController.prototype, "getData", null);
     __decorate([
-        (0, decorator_1.get)("/showData"),
-        (0, decorator_1.use)(checkLogin),
+        (0, index_1.get)("/showData"),
+        (0, index_1.use)(checkLogin),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object, Object]),
         __metadata("design:returntype", void 0)
     ], CrowllerController.prototype, "showData", null);
     CrowllerController = __decorate([
-        decorator_1.controller
+        (0, index_1.controller)("/")
     ], CrowllerController);
     return CrowllerController;
 }());
+exports.CrowllerController = CrowllerController;
