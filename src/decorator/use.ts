@@ -3,6 +3,8 @@ import { LoginController, CrowllerController } from "../controller";
 
 export function use(middleware: RequestHandler) {
   return function (target: LoginController | CrowllerController, key: string) {
-    Reflect.defineMetadata("middleware", middleware, target, key);
+    const middlewares = Reflect.getMetadata("middlewares", target, key) || [];
+    middlewares.push(middleware);
+    Reflect.defineMetadata("middlewares", middlewares, target, key);
   };
 }
